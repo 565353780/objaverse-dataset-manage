@@ -6,6 +6,8 @@ import open3d as o3d
 from tqdm import tqdm
 from multiprocessing import Pool
 
+from trimesh.util import submesh
+
 from objaverse_dataset_manage.Method.path import createFileFolder
 
 
@@ -52,7 +54,14 @@ class MeshConvertor(object):
         mesh = trimesh.load(glb_file_path)
 
         if isinstance(mesh, trimesh.Scene):
-            mesh = trimesh.util.concatenate([geometry for geometry in mesh.geometry.values()])
+            sub_mesh_list = [geometry for geometry in mesh.geometry.values() if isinstance(geometry, trimesh.Trimesh)]
+            if len(sub_mesh_list) == 0:
+                print('[ERROR][MeshConvertor::convertOneShape]')
+                print('\t the glb file contains no mesh!')
+                print('\t glb_file_path:', glb_file_path)
+                return False
+
+            mesh = trimesh.util.concatenate(sub_mesh_list)
 
         min_bound = np.min(mesh.vertices, axis=0)
         max_bound = np.max(mesh.vertices, axis=0)
@@ -94,6 +103,10 @@ class MeshConvertor(object):
             model_id_list.append(model_id)
 
         model_id_list.sort()
+
+        start_idx = 40000
+
+        model_id_list = model_id_list[start_idx:]
 
         print("[INFO][MeshConvertor::convertAllShapes]")
         print('\t start convert all shapes...')
