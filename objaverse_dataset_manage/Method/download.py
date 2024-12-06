@@ -18,17 +18,21 @@ def download_model(model_url, save_path):
 
 def download_filtered_models(model_sizes, base_url, save_dir, minKb, maxKb,num_threads = os.cpu_count()):
     filtered_models = {model_path: size for model_path, size in model_sizes.items() if minKb < size < maxKb * 1024}
+    print('[INFO][download::download_filtered_models]')
+    print('\t filtered_models num =', len(filtered_models.keys()))
+
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
         futures = []
+
         for model_path in filtered_models.keys():
             folder_name = os.path.dirname(model_path)
             sub_folder = os.path.join(save_dir, folder_name)
-            os.makedirs(sub_folder, exist_ok=True)
 
             file_name = os.path.basename(model_path)
             save_path = os.path.join(sub_folder, file_name)
 
             if not os.path.exists(save_path):
+                os.makedirs(sub_folder, exist_ok=True)
                 model_url = f"{base_url}/{model_path}?download=true"
                 futures.append(executor.submit(download_model, model_url, save_path))
 

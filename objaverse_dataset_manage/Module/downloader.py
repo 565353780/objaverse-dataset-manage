@@ -23,13 +23,21 @@ class Downloader(object):
         model_sizes = getModelSizeList()
         print('full objaverse dataset model num =', len(model_sizes))
 
+        print('[INFO][Downloader::downloadGlbs]')
+        print('\t start download_filtered_models...')
         download_filtered_models(model_sizes, BASE_URL, self.save_dir, minKb, maxKb, num_threads)
 
+        print('[INFO][Downloader::downloadGlbs]')
+        print('\t start download_metadata...')
         download_metadata(METADATA_BASE_URL, self.save_metadata_dir)
 
+        print('[INFO][Downloader::downloadGlbs]')
+        print('\t start getExistingModelPathDict...')
         extract_models = getExistingModelPathDict(self.glbs_directory)
 
-        filtered_metadata = getMetaDataDict(extract_models)
+        print('[INFO][Downloader::downloadGlbs]')
+        print('\t start getMetaDataDict...')
+        filtered_metadata = getMetaDataDict(self.save_metadata_dir, extract_models)
 
         with open(self.save_dir + 'metadata.json'  , 'w') as f:
             json.dump(filtered_metadata, f)

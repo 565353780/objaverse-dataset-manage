@@ -36,14 +36,14 @@ def getExistingModelPathDict(glbs_folder_path: str) -> dict:
             existing_models[os.path.basename(file_name)] = file_path
     return existing_models
 
-def getMetaDataDict(existing_models: dict) -> dict:
+def getMetaDataDict(metadata_folder_path: str, existing_models: dict) -> dict:
     metadata = {}
     filtered_metadata = { }
 
-    metadata_path = './objaverse/metadata'
+    metadata_path = metadata_folder_path
     for file_name in os.listdir(metadata_path):
-        if file_name.endswith(".gz"): 
-            file_path = os.path.join(metadata_path, file_name) 
+        if file_name.endswith(".gz"):
+            file_path = os.path.join(metadata_path, file_name)
             with gzip.open(file_path, 'rt', encoding='utf-8') as f:
                 metadata = json.load(f)
                 for key, value in existing_models.items():
