@@ -1,0 +1,6 @@
+# compiled
+.ipynb_checkpoints
+__pycache__
+
+# output
+objaverse
