@@ -1,6 +1,8 @@
 import os
 import json
 import trimesh
+import numpy as np
+import open3d as o3d
 from tqdm import tqdm
 from multiprocessing import Pool
 
@@ -48,6 +50,17 @@ class MeshConvertor(object):
         createFileFolder(save_mesh_file_path)
 
         mesh = trimesh.load(glb_file_path)
+
+        if isinstance(mesh, trimesh.Scene):
+            mesh = trimesh.util.concatenate([geometry for geometry in mesh.geometry.values()])
+
+        min_bound = np.min(mesh.vertices, axis=0)
+        max_bound = np.max(mesh.vertices, axis=0)
+        length = np.max(max_bound - min_bound)
+        scale = 0.9 / length
+        center = (min_bound + max_bound) / 2.0
+
+        mesh.vertices = (mesh.vertices - center) * scale
 
         mesh.export(save_mesh_file_path)
 
