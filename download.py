@@ -5,6 +5,8 @@ if __name__ == "__main__":
     dataset_root_folder_path = '/home/chli/chLi/Dataset/'
     minKb = 2
     maxKb = 80
+    minKb = 0
+    maxKb = 9999999999999999999999
     num_threads = os.cpu_count()
 
     downloader = Downloader(dataset_root_folder_path)

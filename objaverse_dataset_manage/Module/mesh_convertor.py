@@ -2,11 +2,8 @@ import os
 import json
 import trimesh
 import numpy as np
-import open3d as o3d
 from tqdm import tqdm
 from multiprocessing import Pool
-
-from trimesh.util import submesh
 
 from objaverse_dataset_manage.Method.path import createFileFolder
 
