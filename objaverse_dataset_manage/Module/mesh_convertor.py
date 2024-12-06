@@ -2,8 +2,9 @@ import os
 import json
 import trimesh
 from tqdm import tqdm
+from multiprocessing import Pool
 
-from objaverse_dataset_manage.Method.path import createFileFolder, removeFile
+from objaverse_dataset_manage.Method.path import createFileFolder
 
 
 class MeshConvertor(object):
@@ -55,7 +56,10 @@ class MeshConvertor(object):
 
         return True
 
-    def convertAllShapes(self) -> bool:
+    def convertAllShapes(self, worker_num: int = 6) -> bool:
+        if self.force_start:
+            worker_num = 1
+
         metadata_json_file_path = self.dataset_root_folder_path + 'Objaverse/metadata.json'
         if not os.path.exists(metadata_json_file_path):
             print('[ERROR][MeshConvertor::convertAllShapes]')
@@ -69,16 +73,22 @@ class MeshConvertor(object):
 
         keys = list(data.keys())
 
-        print("[INFO][MeshConvertor::convertAllShapes]")
-        print('\t start convert all shapes...')
+        model_id_list = []
+
         for key in tqdm(keys):
             glb_file_path = data[key]['file_path']
             model_id = os.path.relpath(glb_file_path, self.glb_folder_path)[:-4]
+            model_id_list.append(model_id)
 
-            if not self.convertOneShape(model_id):
-                print('[WARN][MeshConvertor::convertAllShapes]')
-                print('\t convertOneShape failed!')
+        model_id_list.sort()
 
-                continue
+        print("[INFO][MeshConvertor::convertAllShapes]")
+        print('\t start convert all shapes...')
+        with Pool(worker_num) as pool:
+            results = list(tqdm(
+                pool.imap(self.convertOneShape, model_id_list),
+                total=len(model_id_list),
+                desc="Processing"
+            ))
 
         return True
