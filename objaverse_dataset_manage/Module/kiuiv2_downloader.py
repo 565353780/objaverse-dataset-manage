@@ -23,9 +23,6 @@ class Downloader(object):
         return
 
     def downloadGlbs(self, csv_file_path: str, num_threads: int = 6) -> bool:
-        model_sizes = getModelSizeList()
-        print('full objaverse dataset model num =', len(model_sizes))
-
         print('[INFO][Downloader::downloadGlbs]')
         print('\t start download_filtered_models...')
         download_kiuiv2_filtered_models(csv_file_path, BASE_URL, self.save_dir, num_threads)
