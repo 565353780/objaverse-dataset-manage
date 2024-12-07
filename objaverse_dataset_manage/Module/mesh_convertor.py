@@ -1,5 +1,4 @@
 import os
-import json
 import trimesh
 import numpy as np
 from tqdm import tqdm
@@ -48,7 +47,13 @@ class MeshConvertor(object):
 
         createFileFolder(save_mesh_file_path)
 
-        mesh = trimesh.load(glb_file_path)
+        try:
+            mesh = trimesh.load(glb_file_path)
+        except:
+            print('[ERROR][MeshConvertor::convertOneShape]')
+            print('\t load glb file failed!')
+            print('\t glb_file_path:', glb_file_path)
+            return False
 
         if isinstance(mesh, trimesh.Scene):
             sub_mesh_list = [geometry for geometry in mesh.geometry.values() if isinstance(geometry, trimesh.Trimesh)]
@@ -79,39 +84,26 @@ class MeshConvertor(object):
         if self.force_start:
             worker_num = 1
 
-        metadata_json_file_path = self.dataset_root_folder_path + 'Objaverse/metadata.json'
-        if not os.path.exists(metadata_json_file_path):
-            print('[ERROR][MeshConvertor::convertAllShapes]')
-            print('\t metadata json file not exist!')
-            print('\t metadata_json_file_path:', metadata_json_file_path)
+        dataset_folder_path = self.glb_folder_path
 
-            return False
+        classname_list = os.listdir(dataset_folder_path)
+        classname_list.sort()
 
-        with open(metadata_json_file_path, 'r') as f:
-            data = json.load(f)
+        for classname in classname_list:
+            class_folder_path = dataset_folder_path + classname + "/"
 
-        keys = list(data.keys())
+            modelid_list = os.listdir(class_folder_path)
+            modelid_list.sort()
 
-        model_id_list = []
+            full_model_id_list = [classname + '/' + model_id[:-4] for model_id in modelid_list]
 
-        for key in tqdm(keys):
-            glb_file_path = data[key]['file_path']
-            model_id = os.path.relpath(glb_file_path, self.glb_folder_path)[:-4]
-            model_id_list.append(model_id)
-
-        model_id_list.sort()
-
-        start_idx = 40000
-
-        model_id_list = model_id_list[start_idx:]
-
-        print("[INFO][MeshConvertor::convertAllShapes]")
-        print('\t start convert all shapes...')
-        with Pool(worker_num) as pool:
-            results = list(tqdm(
-                pool.imap(self.convertOneShape, model_id_list),
-                total=len(model_id_list),
-                desc="Processing"
-            ))
+            print("[INFO][MeshConvertor::convertAllShapes]")
+            print('\t start convert all shapes...')
+            with Pool(worker_num) as pool:
+                results = list(tqdm(
+                    pool.imap(self.convertOneShape, full_model_id_list),
+                    total=len(full_model_id_list),
+                    desc="Processing"
+                ))
 
         return True

@@ -1,7 +1,7 @@
 import json
 import pprint
 
-with open('./objaverse/metadata.json', 'r') as f:
+with open('/home/chli/chLi/Dataset/Objaverse/metadata.json', 'r') as f:
     data = json.load(f)
 
 keys = list(data.keys())

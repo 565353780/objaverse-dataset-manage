@@ -32,7 +32,7 @@ def download_model_pool(inputs):
         if response.status_code == 200:
             with open(save_path, 'wb') as f:
                 f.write(response.content)
-                #print(f"Downloaded: {save_path}")
+                print(f"Downloaded: {save_path}")
         else:
             print(f"Failed to download: {model_url}")
     except Exception as e:

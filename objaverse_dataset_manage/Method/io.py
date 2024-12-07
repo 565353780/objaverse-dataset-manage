@@ -2,6 +2,7 @@ import os
 import glob
 import json 
 import gzip
+import trimesh
 
 def extract_models_from_dump(file_path):
     model_sizes = {}
@@ -52,3 +53,14 @@ def getMetaDataDict(metadata_folder_path: str, existing_models: dict) -> dict:
                         filtered_metadata[key]['file_path'] = value
 
     return filtered_metadata
+
+
+def tryLoadGlb(glb_file_path: str) -> bool:
+    try:
+        trimesh.load(glb_file_path)
+        return True
+    except Exception as e:
+        print('[WARN][io::tryLoadGlb]')
+        print('\t load glb file failed!')
+        print('\t glb_file_path:', glb_file_path)
+        return False
