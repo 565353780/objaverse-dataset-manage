@@ -58,6 +58,8 @@ def download_kiuiv2_filtered_models(csv_file_path: str, base_url, save_dir, num_
             model_id = 'glbs/' + row[0] + '/' + row[1] + '.glb'
             filtered_models.append(model_id)
 
+    filtered_models.sort()
+
     print('[INFO][download::download_filtered_models]')
     print('\t filtered_models num =', len(filtered_models))
 
