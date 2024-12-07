@@ -1,4 +1,6 @@
 import os
+import csv
+from typing import final
 import requests
 from tqdm import tqdm  
 from multiprocessing import Pool
@@ -40,14 +42,51 @@ def download_model_pool(inputs):
 
     return True
 
-def download_filtered_models(model_sizes, base_url, save_dir, minKb, maxKb,num_threads = os.cpu_count()):
-    filtered_models = {model_path: size for model_path, size in model_sizes.items() if minKb < size < maxKb * 1024}
+def download_kiuiv2_filtered_models(csv_file_path: str, base_url, save_dir, num_threads = os.cpu_count()):
+    if not os.path.exists(csv_file_path):
+        print('[ERROR][download::download_kiuiv2_filtered_models]')
+        print('\t csv file not exist!')
+        print('\t csv_file_path:', csv_file_path)
+        return False
+
+    filtered_models = []
+
+    with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
+        csvreader = csv.reader(csvfile)
+
+        for row in csvreader:
+            model_id = 'glbs/' + row[0] + '/' + row[1] + '.glb'
+            filtered_models.append(model_id)
+
     print('[INFO][download::download_filtered_models]')
-    print('\t filtered_models num =', len(filtered_models.keys()))
+    print('\t filtered_models num =', len(filtered_models))
 
     inputs_list = []
 
-    for model_path in filtered_models.keys():
+    for model_path in filtered_models:
+        folder_name = os.path.dirname(model_path)
+        sub_folder = os.path.join(save_dir, folder_name)
+
+        file_name = os.path.basename(model_path)
+        save_path = os.path.join(sub_folder, file_name)
+
+        model_url = f"{base_url}/{model_path}?download=true"
+
+        inputs_list.append([model_url, save_path])
+
+    with Pool(num_threads) as pool:
+        results = list(tqdm(pool.imap(download_model_pool, inputs_list), total=len(inputs_list)))
+
+    return True
+
+def download_filtered_models(model_sizes, base_url, save_dir, minKb, maxKb,num_threads = os.cpu_count()):
+    filtered_models = [model_path for model_path, size in model_sizes.items() if minKb < size < maxKb * 1024]
+    print('[INFO][download::download_filtered_models]')
+    print('\t filtered_models num =', len(filtered_models))
+
+    inputs_list = []
+
+    for model_path in filtered_models:
         folder_name = os.path.dirname(model_path)
         sub_folder = os.path.join(save_dir, folder_name)
 

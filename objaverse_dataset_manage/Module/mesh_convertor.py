@@ -10,13 +10,14 @@ from objaverse_dataset_manage.Method.path import createFileFolder
 class MeshConvertor(object):
     def __init__(self,
                  dataset_root_folder_path: str,
+                 dataset_name: str,
                  force_start: bool = False) -> None:
         self.dataset_root_folder_path = dataset_root_folder_path
         self.force_start = force_start
 
-        self.glb_folder_path = self.dataset_root_folder_path + 'Objaverse/glbs/'
-        self.mesh_folder_path = self.dataset_root_folder_path + 'Objaverse/mesh/'
-        self.tag_folder_path = self.dataset_root_folder_path + "Tag/ObjaverseMesh/"
+        self.glb_folder_path = self.dataset_root_folder_path + dataset_name + '/glbs/'
+        self.mesh_folder_path = self.dataset_root_folder_path + dataset_name + '/mesh/'
+        self.tag_folder_path = self.dataset_root_folder_path + "Tag/" + dataset_name + "_mesh/"
         return
 
     def convertOneShape(self, model_id: str) -> bool:
