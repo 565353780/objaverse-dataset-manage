@@ -27,6 +27,9 @@ class Downloader(object):
         print('\t start download_filtered_models...')
         download_kiuiv2_filtered_models(csv_file_path, BASE_URL, self.save_dir, num_threads)
 
+        #TODO: activate codes below for more info access
+        return True
+
         print('[INFO][Downloader::downloadGlbs]')
         print('\t start download_metadata...')
         download_metadata(METADATA_BASE_URL, self.save_metadata_dir)
@@ -51,7 +54,7 @@ class Downloader(object):
             return True
 
         if not tryLoadGlb(glb_file_path):
-            print('[ERROR][Downloader::removeInvalidGlbs]')
+            print('[ERROR][Downloader::removeInvalidGlb]')
             print('\t tryLoadGlb failed!')
 
             removeFile(glb_file_path)
@@ -64,6 +67,9 @@ class Downloader(object):
         classname_list.sort()
 
         for classname in classname_list:
+            if '.zip' in classname:
+                continue
+
             class_folder_path = self.glbs_directory + classname + "/"
 
             modelid_list = os.listdir(class_folder_path)
@@ -71,8 +77,8 @@ class Downloader(object):
 
             full_model_id_list = [classname + '/' + model_id[:-4] for model_id in modelid_list]
 
-            print("[INFO][MeshConvertor::convertAllShapes]")
-            print('\t start convert all shapes in', classname, '...')
+            print('[INFO][Downloader::removeInvalidGlbs]')
+            print('\t start remove all invalid glb files in', classname, '...')
             with Pool(worker_num) as pool:
                 results = list(tqdm(
                     pool.imap(self.removeInvalidGlb, full_model_id_list),

@@ -1,6 +1,6 @@
 import os
 
-from objaverse_dataset_manage.Module.downloader import Downloader
+from objaverse_dataset_manage.Module.kiuiv2_downloader import Downloader
 
 if __name__ == "__main__":
     dataset_root_folder_path = '/home/chli/chLi/Dataset/'

@@ -5,7 +5,7 @@ def demo():
     dataset_root_folder_path = os.environ['HOME'] + '/chLi/Dataset/'
     dataset_name = 'Objaverse_82K'
     force_start = False
-    worker_num = os.cpu_count()
+    worker_num = 1
 
     mesh_convertor = MeshConvertor(dataset_root_folder_path, dataset_name, force_start)
 
