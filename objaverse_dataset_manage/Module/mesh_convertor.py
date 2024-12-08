@@ -99,7 +99,7 @@ class MeshConvertor(object):
             full_model_id_list = [classname + '/' + model_id[:-4] for model_id in modelid_list]
 
             print("[INFO][MeshConvertor::convertAllShapes]")
-            print('\t start convert all shapes...')
+            print('\t start convert all glb shapes to meshes...')
             with Pool(worker_num) as pool:
                 results = list(tqdm(
                     pool.imap(self.convertOneShape, full_model_id_list),
