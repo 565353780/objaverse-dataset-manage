@@ -14,7 +14,12 @@ def unzipGlbs(glbs_zip_folder_path: str,
     glbs_zip_filename_list.sort()
 
     for glbs_zip_filename in glbs_zip_filename_list:
-        if glbs_zip_filename[:5] != '000-0' or glbs_zip_filename[-4:] != '.zip':
+        if glbs_zip_filename[:4] != '000-' or glbs_zip_filename[-4:] != '.zip':
+            continue
+
+        zip_id = int(glbs_zip_filename[4:7])
+
+        if zip_id >= 123:
             continue
 
         glbs_zip_file_path = glbs_zip_folder_path + glbs_zip_filename
