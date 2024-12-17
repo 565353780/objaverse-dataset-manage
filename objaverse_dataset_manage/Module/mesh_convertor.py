@@ -44,7 +44,7 @@ class MeshConvertor(object):
         with open(start_tag_file_path, "w") as f:
             f.write("\n")
 
-        save_mesh_file_path = self.mesh_folder_path + model_id + '.ply'
+        save_mesh_file_path = self.mesh_folder_path + model_id + '.obj'
 
         createFileFolder(save_mesh_file_path)
 
