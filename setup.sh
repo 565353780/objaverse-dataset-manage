@@ -1,1 +1,1 @@
-pip install -U trimesh
+pip install -U trimesh objaverse
