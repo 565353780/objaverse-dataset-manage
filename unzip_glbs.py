@@ -1,4 +1,5 @@
 import os
+from time import sleep
 
 def unzipGlbs(glbs_zip_folder_path: str,
               objaverse_glbs_folder_path: str
@@ -27,14 +28,15 @@ def unzipGlbs(glbs_zip_folder_path: str,
         print('[INFO][unzip_glbs::unzipGlbs]')
         print('\t start unzip file:', glbs_zip_filename, '...')
         command = 'unzip -u ' + glbs_zip_file_path + ' -d ' + objaverse_glbs_folder_path
+        valid_command = command.replace('\\', '\\\\')
 
-        os.system(command)
+        os.system(valid_command)
 
     return True
 
 if __name__ == "__main__":
     root_list = [
-        '/mnt/data/jintian/chLi/Dataset/',
+        '/mnt/d/chLi/Dataset/',
         os.environ['HOME'] + '/chLi/Dataset/',
     ]
 
@@ -48,7 +50,9 @@ if __name__ == "__main__":
         print('\t dataset not found!')
         exit()
 
-    glbs_zip_folder_path = os.environ['HOME'] + '/Downloads/finished/'
+    glbs_zip_folder_path = os.environ['HOME'] + '/chLi/Downloads/D:\\/'
     objaverse_glbs_folder_path = root_folder_path + 'Objaverse_82K/glbs/'
 
-    unzipGlbs(glbs_zip_folder_path, objaverse_glbs_folder_path)
+    while True:
+        unzipGlbs(glbs_zip_folder_path, objaverse_glbs_folder_path)
+        sleep(60)
