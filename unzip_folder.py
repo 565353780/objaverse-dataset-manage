@@ -20,8 +20,11 @@ if __name__ == "__main__":
         print("\t dataset not found!")
         exit()
 
-    zip_files_folder_path = os.environ['HOME'] + '/chLi/Downloads/D:\\/'
-    unzip_folder_path = root_folder_path + 'Objaverse_82K/glbs/'
+    target_folder = 'glbs'
+    target_folder = 'manifold_sdf_0_25'
+
+    zip_files_folder_path = root_folder_path + 'Objaverse_82K/' + target_folder + '_zip/'
+    unzip_folder_path = root_folder_path + 'Objaverse_82K/' + target_folder + '/'
 
     while True:
         unzipFolder(zip_files_folder_path, unzip_folder_path)

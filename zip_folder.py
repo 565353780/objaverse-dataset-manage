@@ -19,7 +19,10 @@ if __name__ == "__main__":
         print("\t dataset not found!")
         exit()
 
-    folders_folder_path = root_folder_path + 'Objaverse_82K/manifold_sdf_0_25/'
-    zip_folder_path = root_folder_path + 'Objaverse_82K/manifold_sdf_0_25_zip/'
+    target_folder = 'glbs'
+    target_folder = 'manifold_sdf_0_25'
+
+    folders_folder_path = root_folder_path + 'Objaverse_82K/' + target_folder + '/'
+    zip_folder_path = root_folder_path + 'Objaverse_82K/' + target_folder + '_zip/'
 
     zipFolder(folders_folder_path, zip_folder_path)
