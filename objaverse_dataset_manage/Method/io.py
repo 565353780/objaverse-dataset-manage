@@ -24,7 +24,7 @@ def extract_models_from_dump(file_path):
     return model_sizes
 
 def getModelSizeList() -> list:
-    with gzip.open("../objaverse-dataset-manage/objaverse_dataset_manage/Data/model_sizes.json.gz", 'rb') as gzip_file: 
+    with gzip.open("../objaverse-dataset-manage/data/model_sizes.json.gz", 'rb') as gzip_file:
         model_sizes = json.loads(gzip_file.read().decode('utf-8'))
 
     return model_sizes
